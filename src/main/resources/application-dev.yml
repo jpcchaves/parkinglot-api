@@ -1,0 +1,5 @@
+# Locale
+spring:
+  web:
+    locale-resolver: fixed
+    locale: pt_BR
