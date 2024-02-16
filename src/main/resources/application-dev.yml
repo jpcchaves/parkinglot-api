@@ -3,3 +3,5 @@ spring:
   web:
     locale-resolver: fixed
     locale: pt_BR
+timezones:
+  br: America/Sao_Paulo
