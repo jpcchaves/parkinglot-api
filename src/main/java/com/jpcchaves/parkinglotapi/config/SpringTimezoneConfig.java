@@ -10,7 +10,7 @@ import java.util.TimeZone;
 public class SpringTimezoneConfig {
 
     @Value("${timezones.br}")
-    private static String timezone;
+    private String timezone;
 
     @PostConstruct
     public void timezoneConfig(){

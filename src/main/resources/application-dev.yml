@@ -1,7 +1,21 @@
 # Locale
 spring:
+  config:
+    import: optional:file:.env[.properties]
   web:
     locale-resolver: fixed
     locale: pt_BR
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: ${DB_DEV_URL}
+    username: ${DB_DEV_USERNAME}
+    password: ${DB_DEV_PASSWORD}
+  jpa:
+    show_sql: true
+    properties:
+      hibernate:
+        format_sql: true
+    hibernate:
+      ddl-auto: update
 timezones:
   br: America/Sao_Paulo
