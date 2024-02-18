@@ -2,6 +2,8 @@ package com.jpcchaves.parkinglotapi.service.user;
 
 import com.jpcchaves.parkinglotapi.domain.models.User;
 import com.jpcchaves.parkinglotapi.repository.UserRepository;
+import com.jpcchaves.parkinglotapi.uitls.mapper.MapperUtils;
+import com.jpcchaves.parkinglotapi.web.dto.user.UserCreateDTO;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -10,14 +12,18 @@ import java.util.List;
 @Service
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
+    private final MapperUtils mapperUtils;
 
-    public UserServiceImpl(UserRepository userRepository) {
+    public UserServiceImpl(UserRepository userRepository,
+                           MapperUtils mapperUtils) {
         this.userRepository = userRepository;
+        this.mapperUtils = mapperUtils;
     }
 
     @Override
     @Transactional
-    public User createUser(User user) {
+    public User createUser(UserCreateDTO requestDTO) {
+        User user = mapperUtils.parseObject(requestDTO, User.class);
         return userRepository.save(user);
     }
 
