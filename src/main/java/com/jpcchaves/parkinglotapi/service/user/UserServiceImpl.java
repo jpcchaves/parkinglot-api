@@ -5,6 +5,8 @@ import com.jpcchaves.parkinglotapi.repository.UserRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
@@ -34,5 +36,11 @@ public class UserServiceImpl implements UserService {
         User user = getUserById(userId);
         user.setPassword(password);
         return user;
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<User> listAllUsers() {
+        return userRepository.findAll();
     }
 }

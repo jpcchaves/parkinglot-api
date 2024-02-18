@@ -2,6 +2,8 @@ package com.jpcchaves.parkinglotapi.service.user;
 
 import com.jpcchaves.parkinglotapi.domain.models.User;
 
+import java.util.List;
+
 public interface UserService {
     User createUser(User user);
 
@@ -9,4 +11,6 @@ public interface UserService {
 
     User updateUserPassword(Long userId,
                             String password);
+
+    List<User> listAllUsers();
 }
