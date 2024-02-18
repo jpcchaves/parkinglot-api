@@ -6,6 +6,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/v1/users")
 public class UserController {
@@ -29,5 +31,10 @@ public class UserController {
     @PatchMapping("/{userId}")
     public ResponseEntity<User> updateUserPassword(@PathVariable(name = "userId") Long userId, @RequestBody User user) {
         return ResponseEntity.ok(userService.updateUserPassword(userId, user.getPassword()));
+    }
+
+    @GetMapping
+    public ResponseEntity<List<User>> listAllUsers() {
+        return ResponseEntity.ok(userService.listAllUsers());
     }
 }
