@@ -3,8 +3,6 @@ package com.jpcchaves.parkinglotapi.uitls.mapper;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;

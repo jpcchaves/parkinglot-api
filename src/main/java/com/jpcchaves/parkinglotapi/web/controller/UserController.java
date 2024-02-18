@@ -1,7 +1,8 @@
-package com.jpcchaves.parkinglotapi.controller;
+package com.jpcchaves.parkinglotapi.web.controller;
 
 import com.jpcchaves.parkinglotapi.domain.models.User;
 import com.jpcchaves.parkinglotapi.service.user.UserService;
+import com.jpcchaves.parkinglotapi.web.dto.user.UserCreateDTO;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,8 +20,8 @@ public class UserController {
     }
 
     @PostMapping
-    public ResponseEntity<User> createUser(@RequestBody User user) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(userService.createUser(user));
+    public ResponseEntity<User> createUser(@RequestBody UserCreateDTO requestDTO) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(userService.createUser(requestDTO));
     }
 
     @GetMapping("/{userId}")
