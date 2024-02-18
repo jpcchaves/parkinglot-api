@@ -3,6 +3,7 @@ package com.jpcchaves.parkinglotapi.service.user;
 import com.jpcchaves.parkinglotapi.domain.models.User;
 import com.jpcchaves.parkinglotapi.repository.UserRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -13,7 +14,16 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public User createUser(User user) {
         return userRepository.save(user);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public User getUserById(Long userId) {
+        return userRepository.findById(userId).orElseThrow(
+                () -> new RuntimeException("Usuario nao encontrado")
+        );
     }
 }
