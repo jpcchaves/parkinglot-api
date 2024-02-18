@@ -26,4 +26,13 @@ public class UserServiceImpl implements UserService {
                 () -> new RuntimeException("Usuario nao encontrado")
         );
     }
+
+    @Override
+    @Transactional
+    public User updateUserPassword(Long userId,
+                                   String password) {
+        User user = getUserById(userId);
+        user.setPassword(password);
+        return user;
+    }
 }
