@@ -1,4 +1,4 @@
-package com.jpcchaves.parkinglotapi.config;
+package com.jpcchaves.parkinglotapi.config.timezone;
 
 import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Value;
