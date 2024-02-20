@@ -4,6 +4,7 @@ import com.jpcchaves.parkinglotapi.domain.models.User;
 import com.jpcchaves.parkinglotapi.repository.UserRepository;
 import com.jpcchaves.parkinglotapi.uitls.mapper.MapperUtils;
 import com.jpcchaves.parkinglotapi.web.dto.user.UserCreateDTO;
+import com.jpcchaves.parkinglotapi.web.dto.user.UserResponseDTO;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,9 +23,10 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public User createUser(UserCreateDTO requestDTO) {
+    public UserResponseDTO createUser(UserCreateDTO requestDTO) {
         User user = mapperUtils.parseObject(requestDTO, User.class);
-        return userRepository.save(user);
+        User savedUser = userRepository.save(user);
+        return mapperUtils.parseObject(savedUser, UserResponseDTO.class);
     }
 
     @Override
