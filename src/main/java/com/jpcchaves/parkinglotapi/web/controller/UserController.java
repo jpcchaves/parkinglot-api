@@ -4,6 +4,7 @@ import com.jpcchaves.parkinglotapi.domain.models.User;
 import com.jpcchaves.parkinglotapi.service.user.UserService;
 import com.jpcchaves.parkinglotapi.web.dto.user.UserCreateDTO;
 import com.jpcchaves.parkinglotapi.web.dto.user.UserResponseDTO;
+import com.jpcchaves.parkinglotapi.web.dto.user.UserUpdatePasswordDTO;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -31,8 +32,8 @@ public class UserController {
     }
 
     @PatchMapping("/{userId}")
-    public ResponseEntity<User> updateUserPassword(@PathVariable(name = "userId") Long userId, @RequestBody User user) {
-        return ResponseEntity.ok(userService.updateUserPassword(userId, user.getPassword()));
+    public ResponseEntity<User> updateUserPassword(@PathVariable(name = "userId") Long userId, @RequestBody UserUpdatePasswordDTO requestDTO) {
+        return ResponseEntity.ok(userService.updateUserPassword(userId, requestDTO));
     }
 
     @GetMapping
