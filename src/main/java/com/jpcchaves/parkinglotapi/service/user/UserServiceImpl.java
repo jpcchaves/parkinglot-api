@@ -31,17 +31,21 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional(readOnly = true)
-    public User getUserById(Long userId) {
-        return userRepository.findById(userId).orElseThrow(
+    public UserResponseDTO getUserById(Long userId) {
+        User user =  userRepository.findById(userId).orElseThrow(
                 () -> new RuntimeException("Usuario nao encontrado")
         );
+
+        return mapperUtils.parseObject(user, UserResponseDTO.class);
     }
 
     @Override
     @Transactional
     public User updateUserPassword(Long userId,
                                    String password) {
-        User user = getUserById(userId);
+        User user =userRepository.findById(userId).orElseThrow(
+                () -> new RuntimeException("Usuario nao encontrado")
+        );
         user.setPassword(password);
         return user;
     }
