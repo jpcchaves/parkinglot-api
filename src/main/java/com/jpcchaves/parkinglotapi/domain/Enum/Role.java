@@ -11,6 +11,11 @@ public enum Role {
     }
 
     public String getRole() {
-        return role.substring("ROLE_".length());
+        return removeRolePrefix(role);
+    }
+
+    private String removeRolePrefix(String role) {
+        final String ROLE_PREFIX = "ROLE_";
+        return role.substring(ROLE_PREFIX.length());
     }
 }
