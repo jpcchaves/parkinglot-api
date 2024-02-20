@@ -15,5 +15,5 @@ public interface UserService {
     User updateUserPassword(Long userId,
                             UserUpdatePasswordDTO requestDTO);
 
-    List<User> listAllUsers();
+    List<UserResponseDTO> listAllUsers();
 }
