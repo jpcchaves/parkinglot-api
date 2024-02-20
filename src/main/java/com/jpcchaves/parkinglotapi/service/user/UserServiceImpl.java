@@ -4,6 +4,8 @@ import com.jpcchaves.parkinglotapi.domain.models.User;
 import com.jpcchaves.parkinglotapi.repository.UserRepository;
 import com.jpcchaves.parkinglotapi.uitls.mapper.MapperUtils;
 import com.jpcchaves.parkinglotapi.web.dto.user.UserCreateDTO;
+import com.jpcchaves.parkinglotapi.web.dto.user.UserResponseDTO;
+import com.jpcchaves.parkinglotapi.web.dto.user.UserUpdatePasswordDTO;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,25 +24,41 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public User createUser(UserCreateDTO requestDTO) {
+    public UserResponseDTO createUser(UserCreateDTO requestDTO) {
         User user = mapperUtils.parseObject(requestDTO, User.class);
-        return userRepository.save(user);
+        User savedUser = userRepository.save(user);
+        return mapperUtils.parseObject(savedUser, UserResponseDTO.class);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public User getUserById(Long userId) {
-        return userRepository.findById(userId).orElseThrow(
+    public UserResponseDTO getUserById(Long userId) {
+        User user =  userRepository.findById(userId).orElseThrow(
                 () -> new RuntimeException("Usuario nao encontrado")
         );
+
+        return mapperUtils.parseObject(user, UserResponseDTO.class);
     }
 
     @Override
     @Transactional
     public User updateUserPassword(Long userId,
-                                   String password) {
-        User user = getUserById(userId);
-        user.setPassword(password);
+                                   UserUpdatePasswordDTO requestDTO) {
+        if(!passwordMatches(requestDTO.getNewPassword(), requestDTO.getConfirmNewPassword())) {
+            throw new RuntimeException("A nova senha nao condiz com a confirmacao");
+        }
+
+        User user = userRepository.findById(userId).orElseThrow(
+                () -> new RuntimeException("Usuario nao encontrado")
+        );
+
+        if(!passwordMatches(requestDTO.getCurrentPassword(), user.getPassword())) {
+            throw new RuntimeException("A senha atual nao condiz com a senha cadastrada pelo usuario");
+        }
+
+
+        user.setPassword(requestDTO.getNewPassword());
+
         return user;
     }
 
@@ -48,5 +66,9 @@ public class UserServiceImpl implements UserService {
     @Transactional(readOnly = true)
     public List<User> listAllUsers() {
         return userRepository.findAll();
+    }
+
+    private boolean passwordMatches(String passwordToCheck, String passwordToCheckAgainst) {
+        return passwordToCheck.equals(passwordToCheckAgainst);
     }
 }
