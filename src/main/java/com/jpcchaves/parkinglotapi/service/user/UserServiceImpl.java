@@ -5,6 +5,7 @@ import com.jpcchaves.parkinglotapi.repository.UserRepository;
 import com.jpcchaves.parkinglotapi.uitls.mapper.MapperUtils;
 import com.jpcchaves.parkinglotapi.web.dto.user.UserCreateDTO;
 import com.jpcchaves.parkinglotapi.web.dto.user.UserResponseDTO;
+import com.jpcchaves.parkinglotapi.web.dto.user.UserUpdatePasswordDTO;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -42,11 +43,22 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public User updateUserPassword(Long userId,
-                                   String password) {
-        User user =userRepository.findById(userId).orElseThrow(
+                                   UserUpdatePasswordDTO requestDTO) {
+        if(!passwordMatches(requestDTO.getNewPassword(), requestDTO.getConfirmNewPassword())) {
+            throw new RuntimeException("A nova senha nao condiz com a confirmacao");
+        }
+
+        User user = userRepository.findById(userId).orElseThrow(
                 () -> new RuntimeException("Usuario nao encontrado")
         );
-        user.setPassword(password);
+
+        if(!passwordMatches(requestDTO.getCurrentPassword(), user.getPassword())) {
+            throw new RuntimeException("A senha atual nao condiz com a senha cadastrada pelo usuario");
+        }
+
+
+        user.setPassword(requestDTO.getNewPassword());
+
         return user;
     }
 
@@ -54,5 +66,9 @@ public class UserServiceImpl implements UserService {
     @Transactional(readOnly = true)
     public List<User> listAllUsers() {
         return userRepository.findAll();
+    }
+
+    private boolean passwordMatches(String passwordToCheck, String passwordToCheckAgainst) {
+        return passwordToCheck.equals(passwordToCheckAgainst);
     }
 }
