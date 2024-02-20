@@ -64,8 +64,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<User> listAllUsers() {
-        return userRepository.findAll();
+    public List<UserResponseDTO> listAllUsers() {
+        return mapperUtils.parseListObjects(userRepository.findAll(), UserResponseDTO.class);
     }
 
     private boolean passwordMatches(String passwordToCheck, String passwordToCheckAgainst) {
