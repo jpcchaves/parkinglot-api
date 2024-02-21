@@ -4,7 +4,6 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
 
 import java.util.Collection;
-import java.util.List;
 import java.util.stream.Collectors;
 
 @Component
@@ -20,11 +19,20 @@ public class MapperUtils {
         return mapper.map(origin, destination);
     }
 
-    public <O, D> List<D> parseObjectsCollection(Collection<O> origin,
-                                           Class<D> destination) {
+    public <O, D, T extends Collection<D>> T parseObjectsCollection(Collection<O> origin,
+                                                                    Class<D> destination,
+                                                                    Class<T> collectionType) {
         return origin
                 .stream()
                 .map(o -> mapper.map(o, destination))
-                .collect(Collectors.toList());
+                .collect(Collectors.toCollection(() -> instantiateCollection(collectionType)));
+    }
+
+    private <T extends Collection<D>, D> T instantiateCollection(Class<T> collectionType) {
+        try {
+            return collectionType.getDeclaredConstructor().newInstance();
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to instantiate collection type", e);
+        }
     }
 }
