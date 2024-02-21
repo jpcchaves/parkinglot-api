@@ -3,8 +3,8 @@ package com.jpcchaves.parkinglotapi.uitls.mapper;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
 
+import java.util.Collection;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 @Component
@@ -20,19 +20,11 @@ public class MapperUtils {
         return mapper.map(origin, destination);
     }
 
-    public <O, D> List<D> parseListObjects(List<O> origin,
+    public <O, D> List<D> parseObjectsCollection(Collection<O> origin,
                                            Class<D> destination) {
         return origin
                 .stream()
                 .map(o -> mapper.map(o, destination))
                 .collect(Collectors.toList());
-    }
-
-    public <O, D> Set<D> parseSetObjects(Set<O> origin,
-                                         Class<D> destination) {
-        return origin
-                .stream()
-                .map(o -> mapper.map(o, destination))
-                .collect(Collectors.toSet());
     }
 }
