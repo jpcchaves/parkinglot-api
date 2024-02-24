@@ -1,5 +1,6 @@
-package com.jpcchaves.parkinglotapi.exception;
+package com.jpcchaves.parkinglotapi.web.exception;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import org.springframework.validation.BindingResult;
 
 import java.util.Date;
@@ -10,6 +11,8 @@ public class ExceptionResponse {
     private Date timestamp;
     private String message;
     private String path;
+
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private Map<String, String> errors;
 
     public ExceptionResponse(Date timestamp,
