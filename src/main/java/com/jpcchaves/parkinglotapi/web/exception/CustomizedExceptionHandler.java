@@ -1,5 +1,6 @@
-package com.jpcchaves.parkinglotapi.exception;
+package com.jpcchaves.parkinglotapi.web.exception;
 
+import com.jpcchaves.parkinglotapi.exception.UniqueConstraintViolationException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -34,6 +35,17 @@ public class CustomizedExceptionHandler {
 
         ExceptionResponse exceptionResponse = new ExceptionResponse(new Date(), "Campos invalidos!",
                 request.getRequestURI(), result);
+
+        return new ResponseEntity<>(exceptionResponse, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(UniqueConstraintViolationException.class)
+    public final ResponseEntity<ExceptionResponse> handleUniqueConstraintViolationException(UniqueConstraintViolationException ex,
+                                                                                            WebRequest request
+    ) {
+        logger.severe("Error: " + ex.getClass() + " Message: " + ex.getMessage());
+        ExceptionResponse exceptionResponse = new ExceptionResponse(new Date(), ex.getMessage(),
+                request.getDescription(false));
 
         return new ResponseEntity<>(exceptionResponse, HttpStatus.BAD_REQUEST);
     }
