@@ -1,6 +1,7 @@
 package com.jpcchaves.parkinglotapi.service.user;
 
 import com.jpcchaves.parkinglotapi.domain.models.User;
+import com.jpcchaves.parkinglotapi.exception.EntityNotFoundException;
 import com.jpcchaves.parkinglotapi.exception.UniqueConstraintViolationException;
 import com.jpcchaves.parkinglotapi.repository.UserRepository;
 import com.jpcchaves.parkinglotapi.uitls.mapper.MapperUtils;
@@ -40,7 +41,7 @@ public class UserServiceImpl implements UserService {
     @Transactional(readOnly = true)
     public UserResponseDTO getUserById(Long userId) {
         User user =  userRepository.findById(userId).orElseThrow(
-                () -> new RuntimeException("Usuario nao encontrado")
+                () -> new EntityNotFoundException("Usuario nao encontrado")
         );
 
         return mapperUtils.parseObject(user, UserResponseDTO.class);
