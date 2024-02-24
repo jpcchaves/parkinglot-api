@@ -1,6 +1,7 @@
 package com.jpcchaves.parkinglotapi.web.exception;
 
 import com.jpcchaves.parkinglotapi.exception.EntityNotFoundException;
+import com.jpcchaves.parkinglotapi.exception.PasswordInvalidException;
 import com.jpcchaves.parkinglotapi.exception.UniqueConstraintViolationException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
@@ -61,4 +62,15 @@ public class CustomizedExceptionHandler {
 
         return new ResponseEntity<>(exceptionResponse, HttpStatus.NOT_FOUND);
     }
+    @ExceptionHandler(PasswordInvalidException.class)
+    public final ResponseEntity<ExceptionResponse> handleEntityNotFoundException(PasswordInvalidException ex,
+                                                                                 WebRequest request
+    ) {
+        logger.severe("Error: " + ex.getClass() + " Message: " + ex.getMessage());
+        ExceptionResponse exceptionResponse = new ExceptionResponse(new Date(), ex.getMessage(),
+                request.getDescription(false));
+
+        return new ResponseEntity<>(exceptionResponse, HttpStatus.BAD_REQUEST);
+    }
+
 }
