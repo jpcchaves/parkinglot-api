@@ -19,3 +19,11 @@ spring:
       ddl-auto: update
 timezones:
   br: America/Sao_Paulo
+
+# Swagger
+springdoc:
+  swagger-ui:
+    path: /docs-park.html
+  api-docs:
+    path: /docs-park
+  packages-to-scan: com.jpcchaves.parkinglotapi.web.controller
