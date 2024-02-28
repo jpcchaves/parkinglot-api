@@ -19,7 +19,9 @@ spring:
       ddl-auto: update
 timezones:
   br: America/Sao_Paulo
-
+app:
+  jwt:
+    secret: ${JWT_DEV_SECRET}
 # Swagger
 springdoc:
   swagger-ui:
