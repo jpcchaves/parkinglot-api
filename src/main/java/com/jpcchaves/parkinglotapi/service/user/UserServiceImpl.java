@@ -1,5 +1,6 @@
 package com.jpcchaves.parkinglotapi.service.user;
 
+import com.jpcchaves.parkinglotapi.domain.Enum.Role;
 import com.jpcchaves.parkinglotapi.domain.models.User;
 import com.jpcchaves.parkinglotapi.exception.EntityNotFoundException;
 import com.jpcchaves.parkinglotapi.exception.PasswordInvalidException;
@@ -73,6 +74,19 @@ public class UserServiceImpl implements UserService {
     @Transactional(readOnly = true)
     public List<UserResponseDTO> listAllUsers() {
         return mapperUtils.parseObjectsCollection(userRepository.findAll(), UserResponseDTO.class);
+    }
+
+    @Override
+    public User getUserByUsername(String username) {
+        return userRepository
+                .findByUsername(username)
+                .orElseThrow(() -> new EntityNotFoundException("Usuario nao encontrado com o username informado: %s".formatted(username)));
+    }
+
+
+    @Override
+    public Role findRoleByUsername(String username) {
+        return userRepository.findRoleByUsername(username);
     }
 
     private boolean passwordMatches(String passwordToCheck, String passwordToCheckAgainst) {
