@@ -5,6 +5,7 @@ import com.jpcchaves.parkinglotapi.domain.models.User;
 import com.jpcchaves.parkinglotapi.web.dto.user.UserCreateDTO;
 import com.jpcchaves.parkinglotapi.web.dto.user.UserResponseDTO;
 import com.jpcchaves.parkinglotapi.web.dto.user.UserUpdatePasswordDTO;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 

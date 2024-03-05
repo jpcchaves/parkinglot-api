@@ -11,6 +11,7 @@ import com.jpcchaves.parkinglotapi.web.dto.user.UserCreateDTO;
 import com.jpcchaves.parkinglotapi.web.dto.user.UserResponseDTO;
 import com.jpcchaves.parkinglotapi.web.dto.user.UserUpdatePasswordDTO;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,11 +20,14 @@ import java.util.List;
 @Service
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
     private final MapperUtils mapperUtils;
 
     public UserServiceImpl(UserRepository userRepository,
+                           PasswordEncoder passwordEncoder,
                            MapperUtils mapperUtils) {
         this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
         this.mapperUtils = mapperUtils;
     }
 
@@ -32,6 +36,7 @@ public class UserServiceImpl implements UserService {
     public UserResponseDTO createUser(UserCreateDTO requestDTO) {
         try {
         User user = mapperUtils.parseObject(requestDTO, User.class);
+        user.setPassword(passwordEncoder.encode(requestDTO.getPassword()));
         User savedUser = userRepository.save(user);
         return mapperUtils.parseObject(savedUser, UserResponseDTO.class);
         } catch (DataIntegrityViolationException ex) {
@@ -61,11 +66,11 @@ public class UserServiceImpl implements UserService {
                 () -> new EntityNotFoundException("Usuario nao encontrado")
         );
 
-        if(!passwordMatches(requestDTO.getCurrentPassword(), user.getPassword())) {
+        if(!passwordEncoder.matches(requestDTO.getCurrentPassword(), user.getPassword())) {
             throw new PasswordInvalidException("A senha atual nao condiz com a senha cadastrada pelo usuario");
         }
 
-        user.setPassword(requestDTO.getNewPassword());
+        user.setPassword(passwordEncoder.encode(requestDTO.getNewPassword()));
 
         return user;
     }
