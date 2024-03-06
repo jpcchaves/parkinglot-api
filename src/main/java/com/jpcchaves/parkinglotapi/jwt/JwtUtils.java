@@ -6,6 +6,7 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
 import java.nio.charset.StandardCharsets;
 import java.security.Key;
@@ -15,6 +16,7 @@ import java.util.Date;
 import java.util.Objects;
 import java.util.logging.Logger;
 
+@Component
 public class JwtUtils {
 
     private static final Logger logger = Logger.getLogger(JwtUtils.class.getName());
@@ -23,13 +25,21 @@ public class JwtUtils {
     public static final String JWT_AUTHORIZATION = "Authorization";
 
     @Value("${app.jwt.secret}")
+    private String SECRET_KEY_NON_STATIC;
+
     public static String SECRET_KEY;
 
     public static final long EXPIRE_DAYS = 0;
     public static final long EXPIRE_HOURS = 0;
     public static final long EXPIRE_MINUTES = 2;
 
-    private JwtUtils() {}
+    private JwtUtils() {
+    }
+
+    @Value("${app.jwt.secret}")
+    public void setSecretKeyNonStatic(String secretKeyNonStatic) {
+        SECRET_KEY = secretKeyNonStatic;
+    }
 
     private static Key generateKey() {
         return Keys
