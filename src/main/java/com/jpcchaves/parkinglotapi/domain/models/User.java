@@ -2,8 +2,11 @@ package com.jpcchaves.parkinglotapi.domain.models;
 
 import com.jpcchaves.parkinglotapi.domain.Enum.Role;
 import jakarta.persistence.*;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
+import org.springframework.data.annotation.CreatedBy;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedBy;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -12,6 +15,7 @@ import java.util.Objects;
 
 @Entity
 @Table(name = "users")
+@EntityListeners(AuditingEntityListener.class)
 public class User implements Serializable {
     @Serial
     private static final long serialVersionUID = -5062883888516839824L;
@@ -30,12 +34,20 @@ public class User implements Serializable {
     @Column(nullable = false, length = 25)
     private Role role = Role.ROLE_USER;
 
-    @CreationTimestamp
+    @CreatedDate
+    @Column
     private LocalDateTime createdAt;
 
-    @UpdateTimestamp
+    @LastModifiedDate
+    @Column
     private LocalDateTime updatedAt;
+
+    @CreatedBy
+    @Column
     private String createdBy;
+
+    @LastModifiedBy
+    @Column
     private String modifiedBy;
 
     public User() {
