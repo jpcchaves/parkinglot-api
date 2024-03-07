@@ -1,5 +1,6 @@
 package com.jpcchaves.parkinglotapi.config.security;
 
+import com.jpcchaves.parkinglotapi.jwt.JwtAuthenticationEntryPoint;
 import com.jpcchaves.parkinglotapi.jwt.JwtAuthorizationFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -21,9 +22,12 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 @EnableMethodSecurity
 public class SpringSecurityConfig {
     private final JwtAuthorizationFilter jwtAuthorizationFilter;
+    private final JwtAuthenticationEntryPoint authenticationEntryPoint;
 
-    public SpringSecurityConfig(JwtAuthorizationFilter jwtAuthorizationFilter) {
+    public SpringSecurityConfig(JwtAuthorizationFilter jwtAuthorizationFilter,
+                                JwtAuthenticationEntryPoint authenticationEntryPoint) {
         this.jwtAuthorizationFilter = jwtAuthorizationFilter;
+        this.authenticationEntryPoint = authenticationEntryPoint;
     }
 
     @Bean
@@ -41,7 +45,10 @@ public class SpringSecurityConfig {
                 )
                 .sessionManagement(
                         session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                );
+                )
+                 .exceptionHandling(ex -> {
+                     ex.authenticationEntryPoint(authenticationEntryPoint);
+                 });
 
          http.addFilterBefore(jwtAuthorizationFilter, UsernamePasswordAuthenticationFilter.class);
 

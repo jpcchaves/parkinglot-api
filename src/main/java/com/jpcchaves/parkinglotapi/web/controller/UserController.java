@@ -14,6 +14,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -92,6 +93,7 @@ public class UserController {
             }
     )
     @GetMapping("/{userId}")
+    @PreAuthorize("hasRole('ADMIN') OR (hasRole('USER') AND #userId == authentication.principal.id)")
     public ResponseEntity<UserResponseDTO> getUserById(@PathVariable(name = "userId") Long userId) {
         return ResponseEntity.ok(userService.getUserById(userId));
     }
