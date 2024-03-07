@@ -93,7 +93,7 @@ public class UserController {
             }
     )
     @GetMapping("/{userId}")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN') OR (hasRole('USER') AND #userId == authentication.principal.id)")
     public ResponseEntity<UserResponseDTO> getUserById(@PathVariable(name = "userId") Long userId) {
         return ResponseEntity.ok(userService.getUserById(userId));
     }
