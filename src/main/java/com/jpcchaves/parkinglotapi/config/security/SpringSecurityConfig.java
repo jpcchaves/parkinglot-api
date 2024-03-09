@@ -21,6 +21,14 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 @EnableWebMvc
 @EnableMethodSecurity
 public class SpringSecurityConfig {
+    private static final String[] DOCUMENTATION_OPENAPI = {
+            "/docs/index.html",
+            "/docs-park.html", "/docs-park/**",
+            "/v3/api-docs/**",
+            "/swagger-ui-custom.html", "/swagger-ui.html", "/swagger-ui/**",
+            "/**.html", "/webjars/**", "/configuration/**", "/swagger-resources/**"
+    };
+
     private final JwtAuthorizationFilter jwtAuthorizationFilter;
     private final JwtAuthenticationEntryPoint authenticationEntryPoint;
 
@@ -32,13 +40,15 @@ public class SpringSecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-         http
+        http
                 .csrf(AbstractHttpConfigurer::disable)
                 .formLogin(AbstractHttpConfigurer::disable)
                 .httpBasic(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(
                         auth -> auth
-                                .requestMatchers(HttpMethod.POST, "/api/v1/users", "/api/v1/auth/login")
+                                .requestMatchers(HttpMethod.POST, "/api/v1/users", "/api/v1/auth/login", "/v3/api-docs/**")
+                                .permitAll()
+                                .requestMatchers(DOCUMENTATION_OPENAPI)
                                 .permitAll()
                                 .anyRequest()
                                 .authenticated()
@@ -46,13 +56,13 @@ public class SpringSecurityConfig {
                 .sessionManagement(
                         session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
-                 .exceptionHandling(ex -> {
-                     ex.authenticationEntryPoint(authenticationEntryPoint);
-                 });
+                .exceptionHandling(ex -> {
+                    ex.authenticationEntryPoint(authenticationEntryPoint);
+                });
 
-         http.addFilterBefore(jwtAuthorizationFilter, UsernamePasswordAuthenticationFilter.class);
+        http.addFilterBefore(jwtAuthorizationFilter, UsernamePasswordAuthenticationFilter.class);
 
-         return http.build();
+        return http.build();
     }
 
     @Bean
