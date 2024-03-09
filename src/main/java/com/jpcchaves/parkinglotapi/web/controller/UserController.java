@@ -10,6 +10,7 @@ import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -69,6 +70,7 @@ public class UserController {
     }
 
     @Operation(
+            security = @SecurityRequirement(name = "security"),
             summary = "Find user by id",
             description = "Find a new user by passing its ID",
             responses = {
@@ -99,6 +101,7 @@ public class UserController {
     }
 
     @Operation(
+            security = @SecurityRequirement(name = "security"),
             summary = "Updates user password",
             description = "Updates user password",
             responses = {
@@ -113,6 +116,15 @@ public class UserController {
                     @ApiResponse(
                             responseCode = "400",
                             description = "Bad Request",
+                            content = @Content(
+                                    mediaType = "application/json",
+                                    schema = @Schema(
+                                            implementation = ExceptionResponse.class
+                                    ))
+                    ),
+                    @ApiResponse(
+                            responseCode = "403",
+                            description = "Forbbiden! User has no privileges to access this resource",
                             content = @Content(
                                     mediaType = "application/json",
                                     schema = @Schema(
@@ -138,6 +150,7 @@ public class UserController {
     }
 
     @Operation(
+            security = @SecurityRequirement(name = "security"),
             summary = "Gets the users list",
             description = "Gets the users list",
             responses = {
@@ -150,6 +163,15 @@ public class UserController {
                                             schema = @Schema(
                                                     implementation = UserResponseDTO.class
                                             )
+                                    ))
+                    ),
+                    @ApiResponse(
+                            responseCode = "403",
+                            description = "Forbbiden! User has no privileges to access this resource",
+                            content = @Content(
+                                    mediaType = "application/json",
+                                    schema = @Schema(
+                                            implementation = ExceptionResponse.class
                                     ))
                     ),
             }
