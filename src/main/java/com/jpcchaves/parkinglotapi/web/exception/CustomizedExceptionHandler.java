@@ -1,5 +1,6 @@
 package com.jpcchaves.parkinglotapi.web.exception;
 
+import com.jpcchaves.parkinglotapi.exception.CpfUniqueViolationException;
 import com.jpcchaves.parkinglotapi.exception.EntityNotFoundException;
 import com.jpcchaves.parkinglotapi.exception.PasswordInvalidException;
 import com.jpcchaves.parkinglotapi.exception.UniqueConstraintViolationException;
@@ -42,7 +43,7 @@ public class CustomizedExceptionHandler {
         return new ResponseEntity<>(exceptionResponse, HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler(UniqueConstraintViolationException.class)
+    @ExceptionHandler({UniqueConstraintViolationException.class, CpfUniqueViolationException.class})
     public final ResponseEntity<ExceptionResponse> handleUniqueConstraintViolationException(UniqueConstraintViolationException ex,
                                                                                             WebRequest request
     ) {
