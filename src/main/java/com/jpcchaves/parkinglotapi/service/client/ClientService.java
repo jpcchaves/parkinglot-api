@@ -5,4 +5,6 @@ import com.jpcchaves.parkinglotapi.web.dto.client.ClientResponseDTO;
 
 public interface ClientService {
     ClientResponseDTO create(ClientCreateDTO requestDTO);
+
+    ClientResponseDTO getById(Long clientId);
 }

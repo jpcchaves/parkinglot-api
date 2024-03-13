@@ -3,6 +3,7 @@ package com.jpcchaves.parkinglotapi.service.client;
 import com.jpcchaves.parkinglotapi.domain.models.Client;
 import com.jpcchaves.parkinglotapi.domain.models.User;
 import com.jpcchaves.parkinglotapi.exception.CpfUniqueViolationException;
+import com.jpcchaves.parkinglotapi.exception.EntityNotFoundException;
 import com.jpcchaves.parkinglotapi.repository.ClientRepository;
 import com.jpcchaves.parkinglotapi.service.user.UserService;
 import com.jpcchaves.parkinglotapi.uitls.mapper.MapperUtils;
@@ -28,6 +29,14 @@ public class ClientServiceImpl implements ClientService {
     }
 
     @Override
+    @Transactional(readOnly = true)
+    public ClientResponseDTO getById(Long clientId) {
+        Client client = clientRepository.findById(clientId)
+                .orElseThrow(() -> new EntityNotFoundException("Client with the given id: %s".formatted(clientId)));
+        return mapperUtils.parseObject(client, ClientResponseDTO.class);
+    }
+
+    @Override
     @Transactional
     public ClientResponseDTO create(ClientCreateDTO requestDTO) {
         try {
@@ -42,5 +51,7 @@ public class ClientServiceImpl implements ClientService {
                     String.format("CPF %s nao pode ser cadastrado pois ja existe no sistema", requestDTO.getCpf())
             );
         }
+
+
     }
 }
