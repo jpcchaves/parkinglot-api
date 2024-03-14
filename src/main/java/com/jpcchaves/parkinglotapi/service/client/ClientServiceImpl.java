@@ -49,6 +49,13 @@ public class ClientServiceImpl implements ClientService {
     }
 
     @Override
+    @Transactional(readOnly = true)
+    public ClientResponseDTO getClientDetails(JwtUserDetails userDetails) {
+        Client client = clientRepository.findByUser_Id(userDetails.getId()).orElseThrow(() -> new EntityNotFoundException("Client not found for the given user"));
+        return mapperUtils.parseObject(client, ClientResponseDTO.class);
+    }
+
+    @Override
     @Transactional
     public ClientResponseDTO create(ClientCreateDTO requestDTO) {
         try {
@@ -63,5 +70,7 @@ public class ClientServiceImpl implements ClientService {
                     String.format("CPF %s nao pode ser cadastrado pois ja existe no sistema", requestDTO.getCpf())
             );
         }
+
+
     }
 }

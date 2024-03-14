@@ -1,5 +1,6 @@
 package com.jpcchaves.parkinglotapi.web.controller;
 
+import com.jpcchaves.parkinglotapi.jwt.JwtUserDetails;
 import com.jpcchaves.parkinglotapi.service.client.ClientService;
 import com.jpcchaves.parkinglotapi.web.dto.PageableDTO;
 import com.jpcchaves.parkinglotapi.web.dto.client.ClientCreateDTO;
@@ -20,6 +21,7 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -156,5 +158,11 @@ public class ClientController {
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<PageableDTO<?>> getAll(@Parameter(hidden = true) @PageableDefault(size = 5, sort = {"name"}) Pageable pageable) {
         return ResponseEntity.ok(clientService.getClientsList(pageable));
+    }
+
+    @GetMapping("/details")
+    public ResponseEntity<ClientResponseDTO> getClientDetails(@AuthenticationPrincipal
+                                                              JwtUserDetails userDetails) {
+        return ResponseEntity.ok(clientService.getClientDetails(userDetails));
     }
 }
