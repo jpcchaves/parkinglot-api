@@ -7,6 +7,9 @@ import com.jpcchaves.parkinglotapi.web.dto.client.ClientResponseDTO;
 import com.jpcchaves.parkinglotapi.web.dto.user.UserResponseDTO;
 import com.jpcchaves.parkinglotapi.web.exception.ExceptionResponse;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -97,6 +100,57 @@ public class ClientController {
         return ResponseEntity.ok(clientService.getById(clientId));
     }
 
+    @Operation(
+            security = @SecurityRequirement(name = "security"),
+            summary = "Gets the users list",
+            description = "Gets the users list",
+            parameters = {
+                    @Parameter(
+                            in = ParameterIn.QUERY, name = "page",
+                            content = @Content(schema = @Schema(type = "integer", defaultValue = "0"))
+                    ),
+                    @Parameter(
+                            in = ParameterIn.QUERY, name = "size",
+                            content = @Content(schema = @Schema(type = "integer", defaultValue = "20"))
+                    ),
+                    @Parameter(
+                            in = ParameterIn.QUERY, name = "sort",
+                            hidden = true,
+                            content = @Content(schema = @Schema(type = "string", defaultValue = "id,asc"))
+                    )
+            },
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "Gets the users list",
+                            content = @Content(
+                                    mediaType = "application/json",
+                                    array = @ArraySchema(
+                                            schema = @Schema(
+                                                    implementation = UserResponseDTO.class
+                                            )
+                                    ))
+                    ),
+                    @ApiResponse(
+                            responseCode = "401",
+                            description = "Unauthorized! User needs to authenticate to access this resource",
+                            content = @Content(
+                                    mediaType = "application/json",
+                                    schema = @Schema(
+                                            implementation = ExceptionResponse.class
+                                    ))
+                    ),
+                    @ApiResponse(
+                            responseCode = "403",
+                            description = "Forbbiden! User has no privileges to access this resource",
+                            content = @Content(
+                                    mediaType = "application/json",
+                                    schema = @Schema(
+                                            implementation = ExceptionResponse.class
+                                    ))
+                    ),
+            }
+    )
     @GetMapping
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<PageableDTO<?>> getAll(Pageable pageable) {
