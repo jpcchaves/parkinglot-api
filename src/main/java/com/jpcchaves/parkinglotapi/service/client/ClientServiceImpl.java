@@ -4,9 +4,12 @@ import com.jpcchaves.parkinglotapi.domain.models.Client;
 import com.jpcchaves.parkinglotapi.domain.models.User;
 import com.jpcchaves.parkinglotapi.exception.CpfUniqueViolationException;
 import com.jpcchaves.parkinglotapi.exception.EntityNotFoundException;
+import com.jpcchaves.parkinglotapi.jwt.JwtUserDetails;
 import com.jpcchaves.parkinglotapi.repository.ClientRepository;
-import com.jpcchaves.parkinglotapi.service.user.UserService;
+import com.jpcchaves.parkinglotapi.repository.UserRepository;
+import com.jpcchaves.parkinglotapi.repository.projection.ClientProjection;
 import com.jpcchaves.parkinglotapi.uitls.mapper.MapperUtils;
+import com.jpcchaves.parkinglotapi.web.dto.PageableDTO;
 import com.jpcchaves.parkinglotapi.web.dto.client.ClientCreateDTO;
 import com.jpcchaves.parkinglotapi.web.dto.client.ClientResponseDTO;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -16,20 +19,18 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-
 @Service
 public class ClientServiceImpl implements ClientService {
     private final ClientRepository clientRepository;
     private final MapperUtils mapperUtils;
-    private final UserService userService;
+    private final UserRepository userRepository;
 
     public ClientServiceImpl(ClientRepository clientRepository,
                              MapperUtils mapperUtils,
-                             UserService userService) {
+                             UserRepository userRepository) {
         this.clientRepository = clientRepository;
         this.mapperUtils = mapperUtils;
-        this.userService = userService;
+        this.userRepository = userRepository;
     }
 
     @Override
@@ -42,18 +43,19 @@ public class ClientServiceImpl implements ClientService {
 
     @Override
     @Transactional(readOnly = true)
-    public Page<Client> getClientsList(Pageable pageable) {
-        return clientRepository.findAll(pageable);
+    public PageableDTO<?> getClientsList(Pageable pageable) {
+        Page<ClientProjection> clients = clientRepository.findAllPageable(pageable);
+        return mapperUtils.parseObject(clients, PageableDTO.class);
     }
 
     @Override
     @Transactional
     public ClientResponseDTO create(ClientCreateDTO requestDTO) {
         try {
-            User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-            userService.getUserById(user.getId());
+            JwtUserDetails jwtUserDetails = (JwtUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+            User user = userRepository.findById(jwtUserDetails.getId()).orElseThrow(() -> new RuntimeException("An unexpected error occurred. Please, try again!"));
             Client client = mapperUtils.parseObject(requestDTO, Client.class);
-
+            client.setUser(user);
             Client savedClient = clientRepository.save(client);
             return mapperUtils.parseObject(savedClient, ClientResponseDTO.class);
         } catch (DataIntegrityViolationException ex) {
@@ -61,9 +63,5 @@ public class ClientServiceImpl implements ClientService {
                     String.format("CPF %s nao pode ser cadastrado pois ja existe no sistema", requestDTO.getCpf())
             );
         }
-
-
-
-
     }
 }
