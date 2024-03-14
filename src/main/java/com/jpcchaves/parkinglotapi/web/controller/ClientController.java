@@ -1,5 +1,6 @@
 package com.jpcchaves.parkinglotapi.web.controller;
 
+import com.jpcchaves.parkinglotapi.domain.models.Client;
 import com.jpcchaves.parkinglotapi.service.client.ClientService;
 import com.jpcchaves.parkinglotapi.web.dto.client.ClientCreateDTO;
 import com.jpcchaves.parkinglotapi.web.dto.client.ClientResponseDTO;
@@ -11,6 +12,8 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -94,5 +97,11 @@ public class ClientController {
     @GetMapping("/{clientId}")
     public ResponseEntity<ClientResponseDTO> getById(@PathVariable(name = "clientId") Long clientId) {
         return ResponseEntity.ok(clientService.getById(clientId));
+    }
+
+    @GetMapping
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<Page<Client>> getAll(Pageable pageable) {
+        return ResponseEntity.ok(clientService.getClientsList(pageable));
     }
 }
