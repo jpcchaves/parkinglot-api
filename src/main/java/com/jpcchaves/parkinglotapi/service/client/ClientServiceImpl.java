@@ -10,9 +10,13 @@ import com.jpcchaves.parkinglotapi.uitls.mapper.MapperUtils;
 import com.jpcchaves.parkinglotapi.web.dto.client.ClientCreateDTO;
 import com.jpcchaves.parkinglotapi.web.dto.client.ClientResponseDTO;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 public class ClientServiceImpl implements ClientService {
@@ -37,6 +41,12 @@ public class ClientServiceImpl implements ClientService {
     }
 
     @Override
+    @Transactional(readOnly = true)
+    public Page<Client> getClientsList(Pageable pageable) {
+        return clientRepository.findAll(pageable);
+    }
+
+    @Override
     @Transactional
     public ClientResponseDTO create(ClientCreateDTO requestDTO) {
         try {
@@ -51,6 +61,8 @@ public class ClientServiceImpl implements ClientService {
                     String.format("CPF %s nao pode ser cadastrado pois ja existe no sistema", requestDTO.getCpf())
             );
         }
+
+
 
 
     }
