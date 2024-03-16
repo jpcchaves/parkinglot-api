@@ -1,14 +1,14 @@
 package com.jpcchaves.parkinglotapi.web.dto.parkingspace;
 
-public class ParkingSpaceRespondeDTO {
+public class ParkingSpaceResponseDTO {
     private Long id;
     private String parkingSpaceCode;
     private String status;
 
-    public ParkingSpaceRespondeDTO() {
+    public ParkingSpaceResponseDTO() {
     }
 
-    public ParkingSpaceRespondeDTO(Long id,
+    public ParkingSpaceResponseDTO(Long id,
                                    String parkingSpaceCode,
                                    String status) {
         this.id = id;
