@@ -1,9 +1,6 @@
 package com.jpcchaves.parkinglotapi.web.exception;
 
-import com.jpcchaves.parkinglotapi.exception.CpfUniqueViolationException;
-import com.jpcchaves.parkinglotapi.exception.EntityNotFoundException;
-import com.jpcchaves.parkinglotapi.exception.PasswordInvalidException;
-import com.jpcchaves.parkinglotapi.exception.UniqueConstraintViolationException;
+import com.jpcchaves.parkinglotapi.exception.*;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -64,6 +61,7 @@ public class CustomizedExceptionHandler {
 
         return new ResponseEntity<>(exceptionResponse, HttpStatus.NOT_FOUND);
     }
+
     @ExceptionHandler(PasswordInvalidException.class)
     public final ResponseEntity<ExceptionResponse> handleEntityNotFoundException(PasswordInvalidException ex,
                                                                                  WebRequest request
@@ -77,7 +75,7 @@ public class CustomizedExceptionHandler {
 
     @ExceptionHandler(AccessDeniedException.class)
     public final ResponseEntity<ExceptionResponse> handleAccessDeniedException(AccessDeniedException ex,
-                                                                                 WebRequest request
+                                                                               WebRequest request
     ) {
         logger.severe("Error: " + ex.getClass() + " Message: " + ex.getMessage());
         ExceptionResponse exceptionResponse = new ExceptionResponse(new Date(), ex.getMessage(),
@@ -85,5 +83,17 @@ public class CustomizedExceptionHandler {
 
         return new ResponseEntity<>(exceptionResponse, HttpStatus.FORBIDDEN);
     }
+
+    @ExceptionHandler(ParkingSpaceCodeUniqueViolationException.class)
+    public final ResponseEntity<ExceptionResponse> handleParkingSpaceCodeUniqueViolationException(ParkingSpaceCodeUniqueViolationException ex,
+                                                                                                  WebRequest request
+    ) {
+        logger.severe("Error: " + ex.getClass() + " Message: " + ex.getMessage());
+        ExceptionResponse exceptionResponse = new ExceptionResponse(new Date(), ex.getMessage(),
+                request.getDescription(false));
+
+        return new ResponseEntity<>(exceptionResponse, HttpStatus.BAD_REQUEST);
+    }
+
 
 }
