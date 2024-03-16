@@ -5,7 +5,7 @@ import com.jpcchaves.parkinglotapi.exception.EntityNotFoundException;
 import com.jpcchaves.parkinglotapi.exception.ParkingSpaceCodeUniqueViolationException;
 import com.jpcchaves.parkinglotapi.repository.ParkingSpaceRepository;
 import com.jpcchaves.parkinglotapi.web.dto.parkingspace.ParkingSpaceCreateDTO;
-import com.jpcchaves.parkinglotapi.web.dto.parkingspace.ParkingSpaceRespondeDTO;
+import com.jpcchaves.parkinglotapi.web.dto.parkingspace.ParkingSpaceResponseDTO;
 import com.jpcchaves.parkinglotapi.web.dto.parkingspace.mapper.ParkingSpaceMapper;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
@@ -25,7 +25,7 @@ public class ParkingSpaceServiceImpl implements ParkingSpaceService {
 
     @Override
     @Transactional
-    public ParkingSpaceRespondeDTO create(ParkingSpaceCreateDTO requestDTO) {
+    public ParkingSpaceResponseDTO create(ParkingSpaceCreateDTO requestDTO) {
         try {
             ParkingSpace parkingSpace = parkingSpaceRepository
                     .save(parkingSpaceMapper.toParkingSpace(requestDTO));
@@ -34,6 +34,13 @@ public class ParkingSpaceServiceImpl implements ParkingSpaceService {
             throw new ParkingSpaceCodeUniqueViolationException("O codigo da vaga informado ja existe %s"
                     .formatted(requestDTO.getParkingSpaceCode()));
         }
+    }
+
+    @Override
+    public ParkingSpaceResponseDTO getByCode(String code) {
+        return parkingSpaceMapper.toParkingSpaceResponseDTO(
+                findByCode(code)
+        );
     }
 
     private ParkingSpace findByCode(String code) {
