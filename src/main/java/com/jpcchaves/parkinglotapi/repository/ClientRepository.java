@@ -13,8 +13,10 @@ import java.util.Optional;
 @Repository
 public interface ClientRepository extends JpaRepository<Client, Long> {
 
-    @Query("select c from Client c")
-    Page<ClientProjection> findAllPageable(Pageable pageable);
+  @Query("select c from Client c")
+  Page<ClientProjection> findAllPageable(Pageable pageable);
 
-    Optional<Client> findByUser_Id(Long id);
+  Optional<Client> findByUser_Id(Long id);
+
+  Optional<Client> findClientByCpf(String cpf);
 }
