@@ -2,8 +2,8 @@ package com.jpcchaves.parkinglotapi.web.controller;
 
 
 import com.jpcchaves.parkinglotapi.service.client.ParkingLotService;
-import com.jpcchaves.parkinglotapi.web.dto.parkingspace.ParkingSpaceCreateDTO;
-import com.jpcchaves.parkinglotapi.web.dto.parkingspace.ParkingSpaceResponseDTO;
+import com.jpcchaves.parkinglotapi.web.dto.parkingspace.ParkingCreateDTO;
+import com.jpcchaves.parkinglotapi.web.dto.parkingspace.ParkingResponseDTO;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -23,8 +23,8 @@ public class ParkingLotController {
 
   @PostMapping("/check-in")
   @PreAuthorize("hasRole('ADMIN')")
-  public ResponseEntity<ParkingSpaceResponseDTO> checkIn(@RequestBody @Valid
-                                                         ParkingSpaceCreateDTO requestDTO) {
+  public ResponseEntity<ParkingResponseDTO> checkIn(@RequestBody @Valid
+                                                    ParkingCreateDTO requestDTO) {
     return ResponseEntity.ok(parkingLotService.checkIn(requestDTO));
   }
 }
