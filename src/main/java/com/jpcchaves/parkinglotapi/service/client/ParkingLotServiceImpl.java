@@ -10,8 +10,8 @@ import com.jpcchaves.parkinglotapi.repository.ClientParkingSpaceRepository;
 import com.jpcchaves.parkinglotapi.repository.ClientRepository;
 import com.jpcchaves.parkinglotapi.repository.ParkingSpaceRepository;
 import com.jpcchaves.parkinglotapi.util.ParkingSpaceUtils;
-import com.jpcchaves.parkinglotapi.web.dto.parkingspace.ParkingSpaceCreateDTO;
-import com.jpcchaves.parkinglotapi.web.dto.parkingspace.ParkingSpaceResponseDTO;
+import com.jpcchaves.parkinglotapi.web.dto.parkingspace.ParkingCreateDTO;
+import com.jpcchaves.parkinglotapi.web.dto.parkingspace.ParkingResponseDTO;
 import com.jpcchaves.parkinglotapi.web.dto.parkingspace.mapper.ClientParkingSpaceMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -36,7 +36,7 @@ public class ParkingLotServiceImpl implements ParkingLotService {
   }
 
   @Transactional
-  public ParkingSpaceResponseDTO checkIn(ParkingSpaceCreateDTO parkingSpaceCreateDTO) {
+  public ParkingResponseDTO checkIn(ParkingCreateDTO parkingSpaceCreateDTO) {
     ClientParkingSpace clientParkingSpace = clientParkingSpaceMapper.toClientParkingSpace(parkingSpaceCreateDTO);
     Client client = getClientByCpf(clientParkingSpace.getClient().getCpf());
     clientParkingSpace.setClient(client);
