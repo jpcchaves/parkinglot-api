@@ -16,84 +16,93 @@ import java.util.logging.Logger;
 
 @RestControllerAdvice
 public class CustomizedExceptionHandler {
-    static Logger logger = Logger.getLogger(CustomizedExceptionHandler.class.getName());
+  static Logger logger = Logger.getLogger(CustomizedExceptionHandler.class.getName());
 
-    @ExceptionHandler(Exception.class)
-    public final ResponseEntity<ExceptionResponse> handleUnexpectedExceptions(Exception ex,
-                                                                              WebRequest request) {
-        logger.severe("Error: " + ex.getClass() + " Message: " + ex.getMessage());
-        ExceptionResponse exceptionResponse = new ExceptionResponse(new Date(), ex.getMessage(),
-                request.getDescription(false));
+  @ExceptionHandler(Exception.class)
+  public final ResponseEntity<ExceptionResponse> handleUnexpectedExceptions(Exception ex,
+                                                                            WebRequest request) {
+    logger.severe("Error: " + ex.getClass() + " Message: " + ex.getMessage());
+    ExceptionResponse exceptionResponse = new ExceptionResponse(new Date(), ex.getMessage(),
+        request.getDescription(false));
 
-        return new ResponseEntity<>(exceptionResponse, HttpStatus.INTERNAL_SERVER_ERROR);
-    }
+    return new ResponseEntity<>(exceptionResponse, HttpStatus.INTERNAL_SERVER_ERROR);
+  }
 
-    @ExceptionHandler(MethodArgumentNotValidException.class)
-    public final ResponseEntity<ExceptionResponse> handleMethodArgumentNotValidException(MethodArgumentNotValidException ex,
-                                                                                         HttpServletRequest request,
-                                                                                         BindingResult result) {
-        logger.severe("Error: " + ex.getClass() + " Message: " + ex.getMessage());
+  @ExceptionHandler(MethodArgumentNotValidException.class)
+  public final ResponseEntity<ExceptionResponse> handleMethodArgumentNotValidException(MethodArgumentNotValidException ex,
+                                                                                       HttpServletRequest request,
+                                                                                       BindingResult result) {
+    logger.severe("Error: " + ex.getClass() + " Message: " + ex.getMessage());
 
-        ExceptionResponse exceptionResponse = new ExceptionResponse(new Date(), "Campos invalidos!",
-                request.getRequestURI(), result);
+    ExceptionResponse exceptionResponse = new ExceptionResponse(new Date(), "Campos invalidos!",
+        request.getRequestURI(), result);
 
-        return new ResponseEntity<>(exceptionResponse, HttpStatus.BAD_REQUEST);
-    }
+    return new ResponseEntity<>(exceptionResponse, HttpStatus.BAD_REQUEST);
+  }
 
-    @ExceptionHandler({UniqueConstraintViolationException.class, CpfUniqueViolationException.class})
-    public final ResponseEntity<ExceptionResponse> handleUniqueConstraintViolationException(UniqueConstraintViolationException ex,
-                                                                                            WebRequest request
-    ) {
-        logger.severe("Error: " + ex.getClass() + " Message: " + ex.getMessage());
-        ExceptionResponse exceptionResponse = new ExceptionResponse(new Date(), ex.getMessage(),
-                request.getDescription(false));
+  @ExceptionHandler({UniqueConstraintViolationException.class, CpfUniqueViolationException.class})
+  public final ResponseEntity<ExceptionResponse> handleUniqueConstraintViolationException(UniqueConstraintViolationException ex,
+                                                                                          WebRequest request
+  ) {
+    logger.severe("Error: " + ex.getClass() + " Message: " + ex.getMessage());
+    ExceptionResponse exceptionResponse = new ExceptionResponse(new Date(), ex.getMessage(),
+        request.getDescription(false));
 
-        return new ResponseEntity<>(exceptionResponse, HttpStatus.BAD_REQUEST);
-    }
+    return new ResponseEntity<>(exceptionResponse, HttpStatus.BAD_REQUEST);
+  }
 
-    @ExceptionHandler(EntityNotFoundException.class)
-    public final ResponseEntity<ExceptionResponse> handleEntityNotFoundException(EntityNotFoundException ex,
-                                                                                 WebRequest request
-    ) {
-        logger.severe("Error: " + ex.getClass() + " Message: " + ex.getMessage());
-        ExceptionResponse exceptionResponse = new ExceptionResponse(new Date(), ex.getMessage(),
-                request.getDescription(false));
-
-        return new ResponseEntity<>(exceptionResponse, HttpStatus.NOT_FOUND);
-    }
-
-    @ExceptionHandler(PasswordInvalidException.class)
-    public final ResponseEntity<ExceptionResponse> handleEntityNotFoundException(PasswordInvalidException ex,
-                                                                                 WebRequest request
-    ) {
-        logger.severe("Error: " + ex.getClass() + " Message: " + ex.getMessage());
-        ExceptionResponse exceptionResponse = new ExceptionResponse(new Date(), ex.getMessage(),
-                request.getDescription(false));
-
-        return new ResponseEntity<>(exceptionResponse, HttpStatus.BAD_REQUEST);
-    }
-
-    @ExceptionHandler(AccessDeniedException.class)
-    public final ResponseEntity<ExceptionResponse> handleAccessDeniedException(AccessDeniedException ex,
+  @ExceptionHandler(EntityNotFoundException.class)
+  public final ResponseEntity<ExceptionResponse> handleEntityNotFoundException(EntityNotFoundException ex,
                                                                                WebRequest request
-    ) {
-        logger.severe("Error: " + ex.getClass() + " Message: " + ex.getMessage());
-        ExceptionResponse exceptionResponse = new ExceptionResponse(new Date(), ex.getMessage(),
-                request.getDescription(false));
+  ) {
+    logger.severe("Error: " + ex.getClass() + " Message: " + ex.getMessage());
+    ExceptionResponse exceptionResponse = new ExceptionResponse(new Date(), ex.getMessage(),
+        request.getDescription(false));
 
-        return new ResponseEntity<>(exceptionResponse, HttpStatus.FORBIDDEN);
-    }
+    return new ResponseEntity<>(exceptionResponse, HttpStatus.NOT_FOUND);
+  }
 
-    @ExceptionHandler(ParkingSpaceCodeUniqueViolationException.class)
-    public final ResponseEntity<ExceptionResponse> handleParkingSpaceCodeUniqueViolationException(ParkingSpaceCodeUniqueViolationException ex,
-                                                                                                  WebRequest request
-    ) {
-        logger.severe("Error: " + ex.getClass() + " Message: " + ex.getMessage());
-        ExceptionResponse exceptionResponse = new ExceptionResponse(new Date(), ex.getMessage(),
-                request.getDescription(false));
+  @ExceptionHandler(PasswordInvalidException.class)
+  public final ResponseEntity<ExceptionResponse> handleEntityNotFoundException(PasswordInvalidException ex,
+                                                                               WebRequest request
+  ) {
+    logger.severe("Error: " + ex.getClass() + " Message: " + ex.getMessage());
+    ExceptionResponse exceptionResponse = new ExceptionResponse(new Date(), ex.getMessage(),
+        request.getDescription(false));
 
-        return new ResponseEntity<>(exceptionResponse, HttpStatus.BAD_REQUEST);
-    }
+    return new ResponseEntity<>(exceptionResponse, HttpStatus.BAD_REQUEST);
+  }
 
+  @ExceptionHandler(AccessDeniedException.class)
+  public final ResponseEntity<ExceptionResponse> handleAccessDeniedException(AccessDeniedException ex,
+                                                                             WebRequest request
+  ) {
+    logger.severe("Error: " + ex.getClass() + " Message: " + ex.getMessage());
+    ExceptionResponse exceptionResponse = new ExceptionResponse(new Date(), ex.getMessage(),
+        request.getDescription(false));
 
+    return new ResponseEntity<>(exceptionResponse, HttpStatus.FORBIDDEN);
+  }
+
+  @ExceptionHandler(ParkingSpaceCodeUniqueViolationException.class)
+  public final ResponseEntity<ExceptionResponse> handleParkingSpaceCodeUniqueViolationException(ParkingSpaceCodeUniqueViolationException ex,
+                                                                                                WebRequest request
+  ) {
+    logger.severe("Error: " + ex.getClass() + " Message: " + ex.getMessage());
+    ExceptionResponse exceptionResponse = new ExceptionResponse(new Date(), ex.getMessage(),
+        request.getDescription(false));
+
+    return new ResponseEntity<>(exceptionResponse, HttpStatus.BAD_REQUEST);
+  }
+
+  @ExceptionHandler(NoParkingSpaceAvailableExeception.class)
+  public final ResponseEntity<ExceptionResponse> handleNoParkingSpaceAvailableExeception(NoParkingSpaceAvailableExeception ex,
+                                                                                         WebRequest request
+  ) {
+    logger.severe("Error: " + ex.getClass() + " Message: " + ex.getMessage());
+    ExceptionResponse exceptionResponse = new ExceptionResponse(new Date(), ex.getMessage(),
+        request.getDescription(false));
+
+    return new ResponseEntity<>(exceptionResponse, HttpStatus.BAD_REQUEST);
+  }
 }
