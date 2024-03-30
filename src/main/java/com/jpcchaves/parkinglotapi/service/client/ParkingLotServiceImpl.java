@@ -10,6 +10,9 @@ import com.jpcchaves.parkinglotapi.repository.ClientParkingSpaceRepository;
 import com.jpcchaves.parkinglotapi.repository.ClientRepository;
 import com.jpcchaves.parkinglotapi.repository.ParkingSpaceRepository;
 import com.jpcchaves.parkinglotapi.util.ParkingSpaceUtils;
+import com.jpcchaves.parkinglotapi.web.dto.parkingspace.ParkingSpaceCreateDTO;
+import com.jpcchaves.parkinglotapi.web.dto.parkingspace.ParkingSpaceResponseDTO;
+import com.jpcchaves.parkinglotapi.web.dto.parkingspace.mapper.ClientParkingSpaceMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,17 +23,21 @@ public class ParkingLotServiceImpl implements ParkingLotService {
   private final ClientParkingSpaceRepository clientParkingSpaceRepository;
   private final ClientRepository clientRepository;
   private final ParkingSpaceRepository parkingSpaceRepository;
+  private final ClientParkingSpaceMapper clientParkingSpaceMapper;
 
   public ParkingLotServiceImpl(ClientParkingSpaceRepository clientParkingSpaceRepository,
                                ClientRepository clientRepository,
-                               ParkingSpaceRepository parkingSpaceRepository) {
+                               ParkingSpaceRepository parkingSpaceRepository,
+                               ClientParkingSpaceMapper clientParkingSpaceMapper) {
     this.clientParkingSpaceRepository = clientParkingSpaceRepository;
     this.clientRepository = clientRepository;
     this.parkingSpaceRepository = parkingSpaceRepository;
+    this.clientParkingSpaceMapper = clientParkingSpaceMapper;
   }
 
   @Transactional
-  public ClientParkingSpace checkIn(ClientParkingSpace clientParkingSpace) {
+  public ParkingSpaceResponseDTO checkIn(ParkingSpaceCreateDTO parkingSpaceCreateDTO) {
+    ClientParkingSpace clientParkingSpace = clientParkingSpaceMapper.toClientParkingSpace(parkingSpaceCreateDTO);
     Client client = getClientByCpf(clientParkingSpace.getClient().getCpf());
     clientParkingSpace.setClient(client);
 
@@ -40,7 +47,7 @@ public class ParkingLotServiceImpl implements ParkingLotService {
     clientParkingSpace.setEntryDate(LocalDateTime.now());
     clientParkingSpace.setReceipt(ParkingSpaceUtils.generateReceipt());
 
-    return clientParkingSpaceRepository.save(clientParkingSpace);
+    return clientParkingSpaceMapper.toDto(clientParkingSpaceRepository.save(clientParkingSpace));
   }
 
   @Transactional(readOnly = true)
