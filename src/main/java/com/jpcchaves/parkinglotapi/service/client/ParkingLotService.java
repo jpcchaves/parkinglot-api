@@ -1,8 +1,8 @@
 package com.jpcchaves.parkinglotapi.service.client;
 
-import com.jpcchaves.parkinglotapi.web.dto.parkingspace.ParkingSpaceCreateDTO;
-import com.jpcchaves.parkinglotapi.web.dto.parkingspace.ParkingSpaceResponseDTO;
+import com.jpcchaves.parkinglotapi.web.dto.parkingspace.ParkingCreateDTO;
+import com.jpcchaves.parkinglotapi.web.dto.parkingspace.ParkingResponseDTO;
 
 public interface ParkingLotService {
-  ParkingSpaceResponseDTO checkIn(ParkingSpaceCreateDTO parkingSpaceCreateDTO);
+  ParkingResponseDTO checkIn(ParkingCreateDTO parkingSpaceCreateDTO);
 }
