@@ -9,6 +9,7 @@ public class ParkingUtils {
   private static final double FIRST_15_MINUTES_COST = 5.00;
   private static final double FIRST_60_MINUTES_COST = 9.25;
   private static final double EXTRA_15_MINUTES_COST = 1.75;
+  private static final double DISCOUNT_PERCENTAGE = 0.30;
 
   public ParkingUtils() {
   }
@@ -31,5 +32,13 @@ public class ParkingUtils {
     return new BigDecimal(total).setScale(2, RoundingMode.HALF_EVEN);
   }
 
+  public static BigDecimal calcDiscount(BigDecimal cost,
+                                        long numberOfParkingTimes) {
+    BigDecimal discount = ((numberOfParkingTimes > 0) && (numberOfParkingTimes % 10 == 0))
+        ? cost.multiply(new BigDecimal(DISCOUNT_PERCENTAGE))
+        : new BigDecimal(0);
+    
+    return discount.setScale(2, RoundingMode.HALF_EVEN);
+  }
 }
 
