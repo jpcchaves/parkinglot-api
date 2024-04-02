@@ -54,6 +54,11 @@ public class Client extends AuditedEntity implements Serializable {
     this.user = user;
   }
 
+  public Client(builder builder) {
+    this.name = builder.name;
+    this.cpf = builder.cpf;
+  }
+
   public Long getId() {
     return id;
   }
@@ -107,5 +112,27 @@ public class Client extends AuditedEntity implements Serializable {
         ", cpf='" + cpf + '\'' +
         ", user=" + user +
         '}';
+  }
+
+  public static class builder {
+    private String name;
+    private String cpf;
+
+    public builder() {
+    }
+
+    public builder name(String name) {
+      this.name = name;
+      return this;
+    }
+
+    public builder cpf(String cpf) {
+      this.cpf = cpf;
+      return this;
+    }
+
+    public Client build() {
+      return new Client(this);
+    }
   }
 }
