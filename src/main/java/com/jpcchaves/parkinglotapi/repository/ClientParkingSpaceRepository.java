@@ -9,4 +9,6 @@ import java.util.Optional;
 @Repository
 public interface ClientParkingSpaceRepository extends JpaRepository<ClientParkingSpace, Long> {
   Optional<ClientParkingSpace> findByReceiptAndExitDateIsNull(String receipt);
+
+  long countByClientCpfAndExitDateIsNotNull(String cpf);
 }
