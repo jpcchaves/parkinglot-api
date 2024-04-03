@@ -46,4 +46,10 @@ public class ParkingLotController {
   public ResponseEntity<ParkingResponseDTO> getByReceipt(@PathVariable(name = "receipt") String receipt) {
     return ResponseEntity.ok(clientParkingSpaceService.getByReceipt(receipt));
   }
+
+  @PutMapping("/check-out/{receipt}")
+  @PreAuthorize("hasRole('ADMIN')")
+  public ResponseEntity<ParkingResponseDTO> checkout(@PathVariable(name = "receipt") String receipt) {
+    return ResponseEntity.ok(clientParkingSpaceService.checkout(receipt));
+  }
 }
