@@ -7,4 +7,6 @@ public interface ClientParkingSpaceService {
   ClientParkingSpace create(ClientParkingSpace clientParkingSpace);
 
   ParkingResponseDTO getByReceipt(String receipt);
+
+  ParkingResponseDTO checkout(String receipt);
 }
