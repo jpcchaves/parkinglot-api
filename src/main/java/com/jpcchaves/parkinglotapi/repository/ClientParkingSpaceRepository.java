@@ -1,6 +1,9 @@
 package com.jpcchaves.parkinglotapi.repository;
 
 import com.jpcchaves.parkinglotapi.domain.models.ClientParkingSpace;
+import com.jpcchaves.parkinglotapi.repository.projection.ClientParkingProjection;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -11,4 +14,7 @@ public interface ClientParkingSpaceRepository extends JpaRepository<ClientParkin
   Optional<ClientParkingSpace> findByReceiptAndExitDateIsNull(String receipt);
 
   long countByClientCpfAndExitDateIsNotNull(String cpf);
+
+  Page<ClientParkingProjection> findAllByClientCpf(String cpf,
+                                                   Pageable pageable);
 }
