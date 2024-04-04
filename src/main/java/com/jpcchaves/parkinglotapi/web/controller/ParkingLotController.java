@@ -1,14 +1,21 @@
 package com.jpcchaves.parkinglotapi.web.controller;
 
 
+import com.jpcchaves.parkinglotapi.repository.projection.ClientParkingProjection;
 import com.jpcchaves.parkinglotapi.service.client.ClientParkingSpaceService;
 import com.jpcchaves.parkinglotapi.service.client.ParkingLotService;
+import com.jpcchaves.parkinglotapi.uitls.mapper.MapperUtils;
+import com.jpcchaves.parkinglotapi.web.dto.PageableDTO;
 import com.jpcchaves.parkinglotapi.web.dto.parkingspace.ParkingCreateDTO;
 import com.jpcchaves.parkinglotapi.web.dto.parkingspace.ParkingResponseDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -18,11 +25,14 @@ import org.springframework.web.bind.annotation.*;
 public class ParkingLotController {
   private final ParkingLotService parkingLotService;
   private final ClientParkingSpaceService clientParkingSpaceService;
+  private final MapperUtils mapperUtils;
 
   public ParkingLotController(ParkingLotService parkingLotService,
-                              ClientParkingSpaceService clientParkingSpaceService) {
+                              ClientParkingSpaceService clientParkingSpaceService,
+                              MapperUtils mapperUtils) {
     this.parkingLotService = parkingLotService;
     this.clientParkingSpaceService = clientParkingSpaceService;
+    this.mapperUtils = mapperUtils;
   }
 
   @Operation(
@@ -51,5 +61,14 @@ public class ParkingLotController {
   @PreAuthorize("hasRole('ADMIN')")
   public ResponseEntity<ParkingResponseDTO> checkout(@PathVariable(name = "receipt") String receipt) {
     return ResponseEntity.ok(clientParkingSpaceService.checkout(receipt));
+  }
+
+  @GetMapping("/cpf/{cpf}")
+  public ResponseEntity<PageableDTO<?>> getAllParkingsByCpf(@PathVariable(name = "cpf") String cpf,
+                                                            @PageableDefault(size = 5, sort = "entryDate", direction = Sort.Direction.ASC)
+                                                            Pageable pageable) {
+    Page<ClientParkingProjection> projection = clientParkingSpaceService.getAllByCpf(cpf, pageable);
+    PageableDTO<?> pageableDTO = mapperUtils.parseObject(projection, PageableDTO.class);
+    return ResponseEntity.ok(pageableDTO);
   }
 }

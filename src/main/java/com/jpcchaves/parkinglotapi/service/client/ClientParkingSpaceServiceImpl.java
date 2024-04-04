@@ -4,9 +4,12 @@ import com.jpcchaves.parkinglotapi.domain.Enum.ParkingSpaceStatus;
 import com.jpcchaves.parkinglotapi.domain.models.ClientParkingSpace;
 import com.jpcchaves.parkinglotapi.exception.EntityNotFoundException;
 import com.jpcchaves.parkinglotapi.repository.ClientParkingSpaceRepository;
+import com.jpcchaves.parkinglotapi.repository.projection.ClientParkingProjection;
 import com.jpcchaves.parkinglotapi.uitls.mapper.MapperUtils;
 import com.jpcchaves.parkinglotapi.util.ParkingUtils;
 import com.jpcchaves.parkinglotapi.web.dto.parkingspace.ParkingResponseDTO;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -66,5 +69,12 @@ public class ClientParkingSpaceServiceImpl implements ClientParkingSpaceService 
     clientParkingSpaceRepository.save(clientParkingSpace);
 
     return mapperUtils.parseObject(clientParkingSpace, ParkingResponseDTO.class);
+  }
+
+  @Override
+  @Transactional(readOnly = true)
+  public Page<ClientParkingProjection> getAllByCpf(String cpf,
+                                                   Pageable pageable) {
+    return clientParkingSpaceRepository.findAllByClientCpf(cpf, pageable);
   }
 }
