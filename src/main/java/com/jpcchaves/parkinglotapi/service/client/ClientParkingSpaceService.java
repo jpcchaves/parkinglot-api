@@ -15,4 +15,7 @@ public interface ClientParkingSpaceService {
 
   Page<ClientParkingProjection> getAllByCpf(String cpf,
                                             Pageable pageable);
+
+  Page<ClientParkingProjection> getAllByUserId(Long id,
+                                               Pageable pageable);
 }

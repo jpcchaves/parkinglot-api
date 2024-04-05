@@ -77,4 +77,11 @@ public class ClientParkingSpaceServiceImpl implements ClientParkingSpaceService 
                                                    Pageable pageable) {
     return clientParkingSpaceRepository.findAllByClientCpf(cpf, pageable);
   }
+
+  @Override
+  @Transactional(readOnly = true)
+  public Page<ClientParkingProjection> getAllByUserId(Long id,
+                                                      Pageable pageable) {
+    return clientParkingSpaceRepository.findAllByClient_User_Id(id, pageable);
+  }
 }
