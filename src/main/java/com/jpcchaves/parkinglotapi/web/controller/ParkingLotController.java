@@ -1,6 +1,7 @@
 package com.jpcchaves.parkinglotapi.web.controller;
 
 
+import com.jpcchaves.parkinglotapi.jwt.JwtUserDetails;
 import com.jpcchaves.parkinglotapi.repository.projection.ClientParkingProjection;
 import com.jpcchaves.parkinglotapi.service.client.ClientParkingSpaceService;
 import com.jpcchaves.parkinglotapi.service.client.ParkingLotService;
@@ -18,6 +19,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -64,10 +66,21 @@ public class ParkingLotController {
   }
 
   @GetMapping("/cpf/{cpf}")
+  @PreAuthorize("hasRole('ADMIN')")
   public ResponseEntity<PageableDTO<?>> getAllParkingsByCpf(@PathVariable(name = "cpf") String cpf,
                                                             @PageableDefault(size = 5, sort = "entryDate", direction = Sort.Direction.ASC)
                                                             Pageable pageable) {
     Page<ClientParkingProjection> projection = clientParkingSpaceService.getAllByCpf(cpf, pageable);
+    PageableDTO<?> pageableDTO = mapperUtils.parseObject(projection, PageableDTO.class);
+    return ResponseEntity.ok(pageableDTO);
+  }
+
+  @GetMapping
+  @PreAuthorize("hasRole('CLIENT')")
+  public ResponseEntity<PageableDTO<?>> getAllParkingsFromClient(@AuthenticationPrincipal JwtUserDetails user,
+                                                                 @PageableDefault(size = 5, sort = "entryDate", direction = Sort.Direction.ASC)
+                                                                 Pageable pageable) {
+    Page<ClientParkingProjection> projection = clientParkingSpaceService.getAllByUserId(user.getId(), pageable);
     PageableDTO<?> pageableDTO = mapperUtils.parseObject(projection, PageableDTO.class);
     return ResponseEntity.ok(pageableDTO);
   }
